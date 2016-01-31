@@ -222,6 +222,18 @@ Dota2.Dota2Client.prototype.leavePracticeLobby = function(callback) {
                     onPracticeLobbyResponse, callback);
 };
 // callback to onPracticeLobbyResponse
+Dota2.Dota2Client.prototype.abandonCurrentGame = function(callback) {
+    callback = callback || null;
+    var _self = this;
+
+    if (this.debug) util.log("Sending match CMsgAbandonCurrentGame request");
+
+    var payload = new Dota2.schema.CMsgAbandonCurrentGame({});
+    this.sendToGC(  Dota2.schema.EDOTAGCMsg.k_EMsgGCAbandonCurrentGame,
+                    payload,
+                    onPracticeLobbyResponse, callback);
+};
+// callback to onPracticeLobbyResponse
 Dota2.Dota2Client.prototype.launchPracticeLobby = function(callback) {
     callback = callback || null;
     var _self = this;
@@ -236,16 +248,16 @@ Dota2.Dota2Client.prototype.launchPracticeLobby = function(callback) {
 // callback to onPracticeLobbyResponse
 Dota2.Dota2Client.prototype.joinPracticeLobbyTeam = function(slot, team, callback) {
     callback = callback || null;
-    slot = slot || 1;
-    team = team || Dota2.schema.DOTA_GC_TEAM.DOTA_GC_TEAM_PLAYER_POOL;
+    slot = slot ||1;
+    if (typeof team === 'undefined') team = Dota2.schema.DOTA_GC_TEAM.DOTA_GC_TEAM_PLAYER_POOL;
+    
     var _self = this;
 
     if (this.debug) util.log("Sending match CMsgPracticeLobbySetTeamSlot request");
     
     var payload = new Dota2.schema.CMsgPracticeLobbySetTeamSlot({
         "team": team,
-        "slot": slot,
-        "bot_difficulty": 0
+        "slot": slot
     });
     this.sendToGC(  Dota2.schema.EDOTAGCMsg.k_EMsgGCPracticeLobbySetTeamSlot, 
                     payload, 
